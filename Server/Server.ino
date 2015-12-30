@@ -15,6 +15,8 @@ void setup()
     ; // wait for serial port to connect. Needed for Leonardo only
   }
   Ethernet.begin(mac1, ip1/*, gateway, subnet*/);
+
+  delay(1000);
   server.begin();
   
   Serial.println("Server gestartet");
@@ -23,10 +25,14 @@ void setup()
 
 void loop()
 {
+
+  delay(50);
   // if an incoming client connects, there will be bytes available to read:
   char incoming[100];
   EthernetClient client = server.available();
-  if (client == true) {
+  if (client) {
+
+    // client.println(200);
     // read bytes from the incoming client and write them back
     // to any clients connected to the server:
     int ii = 0;
@@ -43,6 +49,8 @@ void loop()
     
     // the variable incoming[] now contains the most recent value sent
     // so you can do something with it
+  } else {
+    Serial.println("client != true");
   }
 }
 
