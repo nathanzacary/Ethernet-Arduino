@@ -1,40 +1,20 @@
-// http://stackoverflow.com/questions/19920796/how-to-have-2-arduinos-communicate-a-variable-over-ethernet
+// Client / Sender / ETH0 / UNO0
 
+#include "config.h"
 #include <SPI.h>
 #include <Ethernet.h>
 
-// network configuration.
-// gateway and subnet are optional.
-
-// the media access control (ethernet hardware) address for the shield:
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-
-// the IP address for the shield:
-byte ip[] = { 192, 168, 188, 115 };
-
-// the router's gateway address:
-byte gateway[] = { 10, 0, 0, 1 };
-
-// the subnet:
-byte subnet[] = { 255, 255, 0, 0 };
-
 char c;
 
-// telnet defaults to port 23
 EthernetServer server = EthernetServer(80);
 
 void setup()
 {
-
-  // Open serial communications and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  // initialize the ethernet device
-  // Ethernet.begin(mac, ip, gateway, subnet);
-  Ethernet.begin(mac, ip);
-  // start listening for clients
+  Ethernet.begin(mac0, ip0, gateway, subnet);
   server.begin();
 }
 
