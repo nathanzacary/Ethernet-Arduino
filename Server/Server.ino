@@ -26,26 +26,24 @@ void setup()
 void loop()
 {
 
-  delay(50);
+  // delay(50);
   // if an incoming client connects, there will be bytes available to read:
   char incoming[100];
   EthernetClient client = server.available();
   if (client) {
 
-    // client.println(200);
-    // read bytes from the incoming client and write them back
-    // to any clients connected to the server:
     int ii = 0;
 
     while ((c = client.read()) != '\n')
     {
       incoming[ii++] = c;
-      Serial.print(c);
+      // Serial.print(c);
     }
 
     Serial.print("Variable incoming[] enthält nun '");
     Serial.print(incoming);
-    Serial.println("'.");
+    Serial.print("'.");
+    Serial.println();
     
     // the variable incoming[] now contains the most recent value sent
     // so you can do something with it
