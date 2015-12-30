@@ -4,18 +4,19 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-char c;
+String command;
 
 EthernetServer server = EthernetServer(80);
 
 void setup()
-{
-  Serial.begin(115200);
+{  
+  Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  Ethernet.begin(mac1, ip1/*, gateway, subnet*/);
 
+  
+  Ethernet.begin(mac1, ip1/*, gateway, subnet*/);
   delay(1000);
   server.begin();
   
@@ -25,30 +26,14 @@ void setup()
 
 void loop()
 {
-
-  // delay(50);
-  // if an incoming client connects, there will be bytes available to read:
-  char incoming[100];
+  delay(10);
+  
   EthernetClient client = server.available();
+  
   if (client) {
-
-    int ii = 0;
-
-    while ((c = client.read()) != '\n')
-    {
-      incoming[ii++] = c;
-      // Serial.print(c);
-    }
-
-    Serial.print("Variable incoming[] enthält nun '");
-    Serial.print(incoming);
-    Serial.print("'.");
+    command = client.readStringUntil('\n');
+    Serial.print(command);
     Serial.println();
-    
-    // the variable incoming[] now contains the most recent value sent
-    // so you can do something with it
-  } else {
-    Serial.println("client != true");
   }
 }
 
