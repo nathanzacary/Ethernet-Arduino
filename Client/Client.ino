@@ -56,9 +56,9 @@ void loop()
       client.print(myVar[ii]);
     }
   }
-  client.print("\n");
-  client.println();
-  client.stop();
+  //client.print("\n");
+  //client.println();
+  //client.stop();
 
   
   // if the server's disconnected, stop the client:
