@@ -6,6 +6,16 @@
 
 String command;
 
+int motrpm00      = 0; // Motordrehwert
+int mot00         = 3; // Motor connected to digital pin 3
+int motdirpin01   = 4; // Motordirection pin 1
+int motdirpin02   = 7; // Motordirection pin 2
+int motdir0       = 2; // Motordirection
+int fivevpin      = 8;
+int calswpin1     = 0; // calibrateswitch connected to digital pin 0
+
+// String v;
+
 EthernetServer server = EthernetServer(80);
 
 void setup()
@@ -42,18 +52,38 @@ void loop()
       String m = command.substring(1, vPos);
       String v = command.substring(vPos+1);
       v = v.toInt();
-      Serial.println("Motor: "+m+" setze "+v.toInt());
+      Serial.println("Motor: "+m+" setze "+v);
+      motrpm00 = v.toInt();
+
+
+      // Calulate Value for Motor Driver
+      if (motrpm00 > 512) {
+        digitalWrite(motdirpin01, LOW);
+        digitalWrite(motdirpin02, HIGH);
+        motdir0   = 0;
+        motrpm00  = motrpm00 - 511;
+      } else if (motrpm00 <= 512) {
+        digitalWrite(motdirpin01, HIGH);
+        digitalWrite(motdirpin02, LOW);
+        motdir0   = 1;
+        motrpm00  = (motrpm00 - 511) * -1;
+      } else {
+        digitalWrite(motdirpin01, HIGH);
+        digitalWrite(motdirpin02, HIGH);
+      }
+      
+      motrpm00 = map(motrpm00, 0, 520, 0, 245);
+      analogWrite(mot00, motrpm00);
+      
+      Serial.print("Motor RPM: ");
+      Serial.print(motrpm00);
+      Serial.print(" Richtung: ");
+      Serial.println(motdir0);
+      
+      
     } else {
       Serial.println("\""+command+"\" ist kein Motor Signal");
     }
-
-
-
-
-
-
-
-    
   }
 }
 

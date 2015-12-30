@@ -82,7 +82,7 @@ void setup() {
 
 void loop()
 {
-  delay(500);
+  delay(1000);
   
   // Debugging (Commands via Serial Console)
   if (Serial.available()) {
