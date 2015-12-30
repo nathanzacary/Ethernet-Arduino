@@ -14,7 +14,28 @@ String command;
 int ii;
 int j;
 
-const byte INPUTS[] = {A2, A3, A4, A5};
+// int a0         = A0;      //Poti connected to pin A0
+int motrpm00      = 0; // Motordrehwert
+int mot00         = 3;    // Motor connected to digital pin 3
+int motdirpin01   = 4; //Motordirection pin 1
+int motdirpin02   = 7; //Motordirection pin 2
+int motdir0       = 2; //Motordirection
+int fivevpin      = 8;
+int calswpin1     = 0; // calibrateswitch connected to digital pin 0
+int calibrate     = HIGH;
+int motrpm00cal   = 0;
+//boolean calibrate = false;
+
+int v;
+
+
+
+
+
+
+
+
+const byte INPUTS[] = {a0, a1, a2, a3};
 
 void setup() {
   pinMode(INPUTS[0], INPUT);
@@ -25,6 +46,17 @@ void setup() {
   // Deactivate SD Card
   pinMode(4, OUTPUT);
   digitalWrite(4, HIGH);
+
+  pinMode(calswpin1,    INPUT);
+  pinMode(motdirpin01,  OUTPUT);
+  pinMode(motdirpin02,  OUTPUT);
+  pinMode(fivevpin,     OUTPUT);
+  pinMode(mot00,        OUTPUT);
+  
+  digitalWrite(fivevpin,  HIGH);      // Voltage for Driver
+  digitalWrite(calswpin1, HIGH);      // turn on pull resistor
+
+  
   
   Serial.begin(9600);
   while (!Serial) {
@@ -64,16 +96,30 @@ void loop()
   // char c = client.read();
   // Serial.print("***Server says:***\n");
   // Serial.print(c);
+  
 
+
+    
   if (debug == "") {
 
     // Programm Logik hier
-    // Read value 1, 2, 3, 4
-    // Send them
-
+    
     for (j=0; j <= 3; j++) {
+      /*
+      calibrate = digitalRead(calswpin1);
+      
+      if (calibrate == LOW){
+        motrpm00    = analogRead(INPUTS[j]);
+        motrpm00cal = motrpm00 - 511;
+        motrpm00    = motrpm00 - motrpm00cal;
+      } else{
+        motrpm00    = analogRead(INPUTS[j]);
+        motrpm00    = motrpm00 - motrpm00cal;
+      }
+      */
 
-      int v = analogRead(INPUTS[j]);
+      // Wert lesen
+      v = analogRead(INPUTS[j]);
       
       command = "A";
       command.concat(j);
@@ -86,7 +132,21 @@ void loop()
       
       sendCommand(myVar);
     }
-    
+
+/*
+    // Calibrate?
+    v = digitalRead(calswpin1);
+    if (v == LOW) {
+      command = "C";
+      command.concat(j);
+      command.concat("v");
+      command.concat(v);
+      command.concat('\n');
+      Serial.print(command);
+      strcpy(myVar, command.c_str());
+      sendCommand(myVar);
+    }
+*/
     
     // strcpy(myVar, "123.456\n");
   } else {
@@ -121,4 +181,84 @@ void sendCommand(char myVar[100]) {
     delay(500);
   }
 }
+
+
+
+
+
+/*
+void setup() {
+  Serial.begin(9600);
+  pinMode(a0, INPUT);
+  pinMode(calswpin1, INPUT);
+  pinMode(motdirpin01, OUTPUT);
+  pinMode(motdirpin02, OUTPUT);
+  pinMode(fivevpin, OUTPUT);
+  pinMode(mot00, OUTPUT);
+  
+  digitalWrite(fivevpin, HIGH);       // Voltage for Driver
+  digitalWrite(calswpin1, HIGH);      // turn on pull resistor
+}
+*/
+
+/*
+void loop() {
+
+    calibrate = digitalRead(calswpin1);
+    
+    if (calibrate == LOW){
+     motrpm00 = analogRead(a0);
+     motrpm00cal = motrpm00-511;
+     motrpm00 = motrpm00 - motrpm00cal;
+    }
+    else{
+      motrpm00 = analogRead(a0);
+      motrpm00 = motrpm00 - motrpm00cal;
+      
+    }
+
+         
+      if (motrpm00 > 512){
+      digitalWrite(motdirpin01, LOW);
+      digitalWrite(motdirpin02, HIGH);
+      motdir0 = 0;
+      motrpm00 = motrpm00-511;
+
+    }
+    else if (motrpm00 <= 512) {
+      digitalWrite(motdirpin01, HIGH);
+      digitalWrite(motdirpin02, LOW);
+      motdir0 = 1;
+      motrpm00 = (motrpm00-511)*-1;
+
+    }
+   else {
+      digitalWrite(motdirpin01, HIGH);
+      digitalWrite(motdirpin02, HIGH);
+   }
+   motrpm00 = map(motrpm00, 0, 520, 0, 245);
+   analogWrite(mot00, motrpm00);
+   delay(20);
+    
+  Serial.print("motrpm00 = " );
+  Serial.print(motrpm00);
+  Serial.print("\n" );
+  Serial.print("motdir0 = " );
+  Serial.print(motdir0);
+  Serial.print("\n" );
+  Serial.print("calibrate = " );
+  Serial.print(calibrate);
+  Serial.print("\n" );
+  Serial.print("motrpm00cal = " );
+  Serial.print(motrpm00cal);
+  Serial.print("\n" );
+}
+
+*/
+
+
+
+
+
+
 
