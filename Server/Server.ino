@@ -14,7 +14,7 @@ void setup()
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  Ethernet.begin(mac1, ip1, gateway, subnet);
+  Ethernet.begin(mac1, ip1/*, gateway, subnet*/);
   server.begin();
   
   Serial.println("Server gestartet");

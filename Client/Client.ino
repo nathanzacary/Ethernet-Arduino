@@ -1,4 +1,4 @@
-// Client
+// Client / Sender / ETH0 / UNO0
 
 #include "config.h"
 #include <SPI.h>
@@ -26,7 +26,7 @@ void loop()
   // but if it did, this is where you would echo it
   int ii;
   while (!client.available()) {
-    Ethernet.begin(mac0, ip0, gateway, subnet);
+    Ethernet.begin(mac0, ip0/*, gateway, subnet*/);
     
     delay(1000);
     

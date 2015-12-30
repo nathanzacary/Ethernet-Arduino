@@ -25,4 +25,14 @@ byte subnet[]   = { 255, 255, 0, 0 };
 int httpport    = 80;
 int serialspeed = 115200;
 
+// Helper
+String ip_to_string(byte ip[4]) {
+    return (ip[0] + String(".") + ip[1] + String(".") + ip[2] + String(".") + ip[3]);
+}
+
+String mac_to_string(byte mac[6]) {
+  return (String(mac[0], HEX) + String(":") + String(mac[1], HEX) + String(":") + String(mac[2], HEX) + String(":") + String(mac[3], HEX) + String(":") + String(mac[4], HEX) + String(":") + String(mac[5], HEX));
+}
+
+
 
