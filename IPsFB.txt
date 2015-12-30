@@ -9,13 +9,12 @@ Arduino 1
 Arduino 2
 192.168.188.191
 
-
-router pw
-3553205197207819
+FRITZ-OS-der-FRITZ-Box-wiederherstellen:
+http://avm.de/service/fritzbox/fritzbox-7170/wissensdatenbank/publication/show/160_FRITZ-OS-der-FRITZ-Box-wiederherstellen/
 
 Ip der FB 7170
 192.168.178.1
 
 
-router pw
+router pw 7170
 3553205197207819
