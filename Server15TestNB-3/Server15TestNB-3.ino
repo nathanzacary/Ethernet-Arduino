@@ -1,4 +1,4 @@
-// Client / Sender / ETH0 / UNO0
+// Server / Receiver / ETH1 / UNO1
 
 #include "config.h"
 #include <SPI.h>
@@ -14,8 +14,11 @@ void setup()
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  Ethernet.begin(mac0, ip0, gateway, subnet);
+  Ethernet.begin(mac1, ip1, gateway, subnet);
   server.begin();
+  
+  Serial.println("Server gestartet");
+  Serial.println("warte auf ankommende Signale...");
 }
 
 void loop()
@@ -33,6 +36,11 @@ void loop()
       incoming[ii++] = c;
       Serial.print(c);
     }
+
+    Serial.print("Variable incoming[] enthält nun '");
+    Serial.print(incoming);
+    Serial.println("'.");
+    
     // the variable incoming[] now contains the most recent value sent
     // so you can do something with it
   }

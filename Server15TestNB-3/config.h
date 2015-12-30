@@ -21,4 +21,8 @@ byte gateway[]  = { 10, 0, 0, 1 };
 byte subnet[]   = { 255, 255, 0, 0 };
 
 
+// Misc
+int httpport    = 80;
+int serialspeed = 115200;
+
 
