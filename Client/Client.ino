@@ -35,7 +35,7 @@ int v;
 
 
 
-const byte INPUTS[] = {a0, a1, a2, a3};
+
 
 void setup() {
   pinMode(INPUTS[0], INPUT);

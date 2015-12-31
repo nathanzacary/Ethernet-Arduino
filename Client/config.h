@@ -2,10 +2,12 @@
 // Client / Sender / ETH0 / UNO0
 byte mac0[]     = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte ip0[]      = { 192, 168, 188, 115 };
-int a0          = A2; // Analog Port
+int a0          = A2; // Analog Port, A0 and A1 can not be used with Ethernet shield!!!
 int a1          = A3;
 int a2          = A4;
 int a3          = A5;
+const byte INPUTS[] = {a0, a1, a2, a3};
+
 
 // Server / Receiver / ETH1 / UNO1
 byte mac1[]     = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEC };
