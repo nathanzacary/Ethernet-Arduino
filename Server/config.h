@@ -2,7 +2,7 @@
 // Client / Sender / ETH0 / UNO0
 byte mac0[]     = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte ip0[]      = { 192, 168, 188, 115 };
-int pina0          = A2; // Analog Port
+int pina0          = A2; // Analog Port, A0 and A2 can not be used with Ethernet shield!!!
 int pina1          = A3;
 int pina2          = A4;
 int pina3          = A5;

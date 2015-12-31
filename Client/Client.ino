@@ -101,7 +101,7 @@ void loop()
 
     // Only 1 Motor: use "j <= 0"
     
-    for (j=0; j <= 3; j++) {
+    for (j=0; j <= (sizeof(INPUTS) - 1); j++) {
       /*
       calibrate = digitalRead(calswpin1);
       

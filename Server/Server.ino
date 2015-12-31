@@ -49,6 +49,7 @@ void loop()
   if (client) {
     command = client.readStringUntil('\n');
     command.toUpperCase();
+    command.trim();
     // Serial.print(command);
     // Serial.println();
 
