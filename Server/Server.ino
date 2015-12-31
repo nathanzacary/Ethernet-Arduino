@@ -8,13 +8,11 @@ String command;
 
 int motrpm00      = 0; // Motordrehwert
 int mot00         = 3; // Motor connected to digital pin 3
-int motdirpin01   = 4; // Motordirection pin 1
+int motdirpin01   = 5; // Motordirection pin 1
 int motdirpin02   = 7; // Motordirection pin 2
 int motdir0       = 2; // Motordirection
 int fivevpin      = 8;
 int calswpin1     = 0; // calibrateswitch connected to digital pin 0
-
-// String v;
 
 EthernetServer server = EthernetServer(80);
 
@@ -26,14 +24,21 @@ void setup()
   pinMode(mot00,        OUTPUT);
   digitalWrite(calswpin1, HIGH);      // turn on pull resistor
 
-
+  // Deactivate SD Card, See http://electronics.stackexchange.com/a/67214/3130
+  pinMode(4, OUTPUT);
+  pinMode(10, OUTPUT);
+  digitalWrite(4, HIGH);
+  digitalWrite(10, LOW);
+  
   Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
   
-  Ethernet.begin(mac1, ip1/*, gateway, subnet*/);
+  Ethernet.begin(mac1, ip1, _dns/*, gateway, subnet*/);
   delay(1000);
+  Serial.println(Ethernet.localIP());
+  
   server.begin();
   
   Serial.println("Server gestartet");

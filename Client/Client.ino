@@ -43,9 +43,11 @@ void setup() {
   pinMode(INPUTS[2], INPUT);
   pinMode(INPUTS[3], INPUT);
 
-  // Deactivate SD Card
+  // Deactivate SD Card, See http://electronics.stackexchange.com/a/67214/3130
   pinMode(4, OUTPUT);
+  pinMode(10, OUTPUT);
   digitalWrite(4, HIGH);
+  digitalWrite(10, LOW);
 
   pinMode(calswpin1,    INPUT);
   pinMode(motdirpin01,  OUTPUT);
@@ -63,8 +65,10 @@ void setup() {
 
 
 
-  Ethernet.begin(mac0, ip0/*, gateway, subnet*/);
-  delay(200);
+  Ethernet.begin(mac0, ip0, _dns, gateway, subnet);
+  delay(1000);
+
+  Serial.println(Ethernet.localIP());
 
   Serial.println("Try to connect to "+ip_to_string(ip1)+":"+httpport+" MAC "+mac_to_string(mac1));
 
@@ -173,89 +177,10 @@ void sendCommand(char myVar[100]) {
   if (!client.connected()) {
     Serial.println();
     Serial.println("disconnected/disconnecting...");
+    client.flush();
     client.stop();
     client.connect(ip1, httpport);
     delay(500);
   }
 }
-
-
-
-
-
-/*
-void setup() {
-  Serial.begin(9600);
-  pinMode(a0, INPUT);
-  pinMode(calswpin1, INPUT);
-  pinMode(motdirpin01, OUTPUT);
-  pinMode(motdirpin02, OUTPUT);
-  pinMode(fivevpin, OUTPUT);
-  pinMode(mot00, OUTPUT);
-  
-  digitalWrite(fivevpin, HIGH);       // Voltage for Driver
-  digitalWrite(calswpin1, HIGH);      // turn on pull resistor
-}
-*/
-
-/*
-void loop() {
-
-    calibrate = digitalRead(calswpin1);
-    
-    if (calibrate == LOW){
-     motrpm00 = analogRead(a0);
-     motrpm00cal = motrpm00-511;
-     motrpm00 = motrpm00 - motrpm00cal;
-    }
-    else{
-      motrpm00 = analogRead(a0);
-      motrpm00 = motrpm00 - motrpm00cal;
-      
-    }
-
-         
-      if (motrpm00 > 512){
-      digitalWrite(motdirpin01, LOW);
-      digitalWrite(motdirpin02, HIGH);
-      motdir0 = 0;
-      motrpm00 = motrpm00-511;
-
-    }
-    else if (motrpm00 <= 512) {
-      digitalWrite(motdirpin01, HIGH);
-      digitalWrite(motdirpin02, LOW);
-      motdir0 = 1;
-      motrpm00 = (motrpm00-511)*-1;
-
-    }
-   else {
-      digitalWrite(motdirpin01, HIGH);
-      digitalWrite(motdirpin02, HIGH);
-   }
-   motrpm00 = map(motrpm00, 0, 520, 0, 245);
-   analogWrite(mot00, motrpm00);
-   delay(20);
-    
-  Serial.print("motrpm00 = " );
-  Serial.print(motrpm00);
-  Serial.print("\n" );
-  Serial.print("motdir0 = " );
-  Serial.print(motdir0);
-  Serial.print("\n" );
-  Serial.print("calibrate = " );
-  Serial.print(calibrate);
-  Serial.print("\n" );
-  Serial.print("motrpm00cal = " );
-  Serial.print(motrpm00cal);
-  Serial.print("\n" );
-}
-
-*/
-
-
-
-
-
-
 
