@@ -19,5 +19,5 @@ http://avm.de/service/fritzbox/fritzbox-7170/wissensdatenbank/publication/show/1
 router pw 7170 (EthernetArduinoRouter)
 3553205197207819
 
-Benutzeroberfläche pw
+Benutzeroberfläche pw:
 friedensstrasse
