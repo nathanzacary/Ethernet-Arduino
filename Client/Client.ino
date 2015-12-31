@@ -50,10 +50,7 @@ void setup() {
   pinMode(calswpin1,    INPUT);
   pinMode(motdirpin01,  OUTPUT);
   pinMode(motdirpin02,  OUTPUT);
-  pinMode(fivevpin,     OUTPUT);
   pinMode(mot00,        OUTPUT);
-  
-  digitalWrite(fivevpin,  HIGH);      // Voltage for Driver
   digitalWrite(calswpin1, HIGH);      // turn on pull resistor
 
   
@@ -82,7 +79,7 @@ void setup() {
 
 void loop()
 {
-  delay(1000);
+  delay(100);
   
   // Debugging (Commands via Serial Console)
   if (Serial.available()) {
@@ -102,7 +99,7 @@ void loop()
     
   if (debug == "") {
 
-    // Programm Logik hier
+    // Only 1 Motor: use "j <= 0"
     
     for (j=0; j <= 3; j++) {
       /*

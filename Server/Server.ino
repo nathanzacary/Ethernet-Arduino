@@ -20,11 +20,17 @@ EthernetServer server = EthernetServer(80);
 
 void setup()
 {  
+  pinMode(calswpin1,    INPUT);
+  pinMode(motdirpin01,  OUTPUT);
+  pinMode(motdirpin02,  OUTPUT);
+  pinMode(mot00,        OUTPUT);
+  digitalWrite(calswpin1, HIGH);      // turn on pull resistor
+
+
   Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-
   
   Ethernet.begin(mac1, ip1/*, gateway, subnet*/);
   delay(1000);
@@ -36,7 +42,7 @@ void setup()
 
 void loop()
 {
-  delay(10);
+  // delay(10);
   
   EthernetClient client = server.available();
   
