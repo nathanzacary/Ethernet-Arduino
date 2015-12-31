@@ -1,20 +1,23 @@
-Adressbereich FB neu 7490
-192.168.188.020
-bis
-192.168.188.200
+Adressbereich Fritz!Box 7170
+Neue SSID:
+EthernetArduinoRouter
+IP der FB:
+192.168.178.1
 
-Arduino 1
-192.168.188.190
+Adressbereich:
+von: 192.168.178.20
+bis: 192.168.178.200
 
-Arduino 2
-192.168.188.191
+SUBNET
+255.255.255.0
+
 
 FRITZ-OS-der-FRITZ-Box-wiederherstellen:
 http://avm.de/service/fritzbox/fritzbox-7170/wissensdatenbank/publication/show/160_FRITZ-OS-der-FRITZ-Box-wiederherstellen/
 
-Ip der FB 7170
-192.168.178.1
 
-
-router pw 7170
+router pw 7170 (EthernetArduinoRouter)
 3553205197207819
+
+Benutzeroberfläche pw
+friedensstrasse
