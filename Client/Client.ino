@@ -55,13 +55,14 @@ void loop()
   
   // Manual Commands via Serial Console
   if (Serial.available()) {
-      manual_command = Serial.readString();
-      manual_command.trim();
-  }
-  if (manual_command != "") {
-    Serial.println("****Manual Command \""+manual_command+"\" ****");
-    manual_command += "\n";
-    sendCommand(manual_command);
+    manual_command = Serial.readString();
+    manual_command.trim();
+
+    if (manual_command != "") {
+      Serial.println("****Manual Command \""+manual_command+"\" ****");
+      manual_command += "\n";
+      sendCommand(manual_command);
+    }
   }
 
   
@@ -83,8 +84,6 @@ void loop()
   // char c = client.read();
   // Serial.print("Server says: ");
   // Serial.println(c);
-
-  manual_command = "";
 }
 
 void sendCommand(String command) {
