@@ -89,7 +89,6 @@ void sendCommand(String command) {
   Serial.print("Sending: ");
   Serial.print(command);
 
-  command.toCharArray(command_to_send, 100); // TODO append \n in any case
 
   if (!client.connected()) {
     Serial.println();
@@ -98,7 +97,11 @@ void sendCommand(String command) {
     client.stop();
     client.connect(ip1, httpport);
     delay(500);
+    
+    // sendCommand(command); // Better use current command and not this one 
   }
+
+  command.toCharArray(command_to_send, 100); // TODO append \n in any case
 
   if (client.connected()) {
     for (i = 0; i < strlen(command_to_send); i++) {
