@@ -4,15 +4,14 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-String command;
+int motrpm      = 0; // Motordrehwert
+int motdirpin01 = 5; // Motordirection pin 1
+int motdirpin02 = 7; // Motordirection pin 2
+int motdir      = 2; // Motordirection
+int calswpin1   = 0; // calibrateswitch connected to digital pin 0
 
-int motrpm00      = 0; // Motordrehwert
-int mot00         = 3; // Motor connected to digital pin 3
-int motdirpin01   = 5; // Motordirection pin 1
-int motdirpin02   = 7; // Motordirection pin 2
-int motdir0       = 2; // Motordirection
-int fivevpin      = 8;
-int calswpin1     = 0; // calibrateswitch connected to digital pin 0
+char command_type;
+String command;
 
 EthernetServer server = EthernetServer(80);
 
@@ -21,11 +20,14 @@ void setup()
   pinMode(calswpin1,    INPUT);
   pinMode(motdirpin01,  OUTPUT);
   pinMode(motdirpin02,  OUTPUT);
-  pinMode(mot00,        OUTPUT);
-  digitalWrite(calswpin1, HIGH);      // turn on pull resistor
+  digitalWrite(calswpin1, HIGH); // turn on pull resistor
+  
+  for (int i=0; i++; i<=sizeof(MOTORS)) {
+    pinMode(MOTORS[i],  OUTPUT);
+  }
 
   // Deactivate SD Card, See http://electronics.stackexchange.com/a/67214/3130
-  pinMode(4, OUTPUT);
+  pinMode(4,  OUTPUT);
   pinMode(10, OUTPUT);
   digitalWrite(4, HIGH);
   digitalWrite(10, LOW);
@@ -47,54 +49,67 @@ void setup()
 
 void loop()
 {
-  // delay(10);
-  
   EthernetClient client = server.available();
   
   if (client) {
+    
     command = client.readStringUntil('\n');
     command.toUpperCase();
     command.trim();
-    // Serial.print(command);
-    // Serial.println();
 
-    // Motor Signal, zB. "A3v501" -> Motor 4 Wert 501
-    if (command.startsWith("A")) {
-      int vPos = command.indexOf("V");
-      String m = command.substring(1, vPos);
-      String v = command.substring(vPos+1);
-      v = v.toInt();
-      Serial.println("Motor: "+m+" setze "+v);
-      motrpm00 = v.toInt();
+    command_type = command.charAt(0);
+    switch (command_type) {
+      // Motor Signal, zB. "A3v501" -> Motor 4 Wert 501
+      case 1:
+        int vPos      = command.indexOf("V");
+        String m_tmp  = command.substring(1, vPos);
+        int m         = m_tmp.toInt();
+        String v      = command.substring(vPos+1);
+        v             = v.toInt();
+        motrpm        = v.toInt();
+        Serial.println('Motor: '+m+' Value '+v);
 
 
-      // Calulate Value for Motor Driver
-      if (motrpm00 > 512) {
-        digitalWrite(motdirpin01, LOW);
-        digitalWrite(motdirpin02, HIGH);
-        motdir0   = 0;
-        motrpm00  = motrpm00 - 511;
-      } else if (motrpm00 <= 512) {
-        digitalWrite(motdirpin01, HIGH);
-        digitalWrite(motdirpin02, LOW);
-        motdir0   = 1;
-        motrpm00  = (motrpm00 - 511) * -1;
-      } else {
-        digitalWrite(motdirpin01, HIGH);
-        digitalWrite(motdirpin02, HIGH);
-      }
+        // Calulate Value for Motor Driver
+        motdir = -1;
+        if (motrpm > 512) {
+          motdir    = 0;
+          motrpm    = motrpm - 511;
+        } else if (motrpm <= 512) {
+          motdir    = 1;
+          motrpm    = (motrpm - 511) * -1;
+        }
+
+        // Apply Motor Direction
+        switch (motdir) {
+          case 0:
+            digitalWrite(motdirpin01, LOW);
+            digitalWrite(motdirpin02, HIGH);
+          break;
+          case 1:
+            digitalWrite(motdirpin01, HIGH);
+            digitalWrite(motdirpin02, LOW);
+          break;
+          default:
+            digitalWrite(motdirpin01, HIGH);
+            digitalWrite(motdirpin02, HIGH);
+          break;
+        }
+
+        // Apply Motor Speed
+        motrpm = map(motrpm, 0, 520, 0, 245);
+        analogWrite(MOTORS[m], motrpm);
+
+        
+        Serial.print("Motor RPM: ");
+        Serial.print(motrpm);
+        Serial.print(" Richtung: ");
+        Serial.println(motdir);
+      break;
       
-      motrpm00 = map(motrpm00, 0, 520, 0, 245);
-      analogWrite(mot00, motrpm00);
-      
-      Serial.print("Motor RPM: ");
-      Serial.print(motrpm00);
-      Serial.print(" Richtung: ");
-      Serial.println(motdir0);
-      
-      
-    } else {
-      Serial.println("\""+command+"\" ist kein Motor Signal");
+      // default:
+      //   Serial.println('Command Type "'+command_type+'" ist nicht bekannt.');
+      // break;
     }
   }
 }

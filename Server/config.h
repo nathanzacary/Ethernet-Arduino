@@ -15,6 +15,7 @@ int m0          = 3; // PWM Port
 int m1          = 5;
 int m2          = 6;
 int m3          = 9;
+const byte MOTORS[] = {m0/*, m1, m2, m3*/};
 
 
 // Wifi Router
