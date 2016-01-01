@@ -10,8 +10,7 @@ int motdirpin02 = 7; // Motordirection pin 2
 int motdir      = 2; // Motordirection
 int calswpin1   = 0; // calibrateswitch connected to digital pin 0
 
-char command_type;
-String command;
+
 
 EthernetServer server = EthernetServer(80);
 
@@ -47,11 +46,19 @@ void setup()
   Serial.println("warte auf ankommende Signale...");
 }
 
+
 void loop()
 {
   EthernetClient client = server.available();
   
   if (client) {
+    
+    char    command_type;
+    String  command;
+    int     v_pos;
+    String  m_tmp;
+    int     m;
+    String  v;
     
     command = client.readStringUntil('\n');
     command.toUpperCase();
@@ -59,14 +66,15 @@ void loop()
 
     command_type = command.charAt(0);
     switch (command_type) {
+      
       // Motor Signal, zB. "A3v501" -> Motor 4 Wert 501
       case 1:
-        int vPos      = command.indexOf("V");
-        String m_tmp  = command.substring(1, vPos);
-        int m         = m_tmp.toInt();
-        String v      = command.substring(vPos+1);
-        v             = v.toInt();
-        motrpm        = v.toInt();
+        v_pos   = command.indexOf("V");
+        m_tmp   = command.substring(1, v_pos);
+        m       = m_tmp.toInt();
+        v       = command.substring(v_pos + 1);
+        v       = v.toInt();
+        motrpm  = v.toInt();
         Serial.println('Motor: '+m+' Value '+v);
 
 
@@ -107,9 +115,9 @@ void loop()
         Serial.println(motdir);
       break;
       
-      // default:
-      //   Serial.println('Command Type "'+command_type+'" ist nicht bekannt.');
-      // break;
+      default:
+        Serial.println('Command Type "'+command_type+'" ist nicht bekannt.');
+      break;
     }
   }
 }
