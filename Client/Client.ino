@@ -14,6 +14,7 @@ int     i, j, v;
 
 
 void setup() {
+
   for (j=0; j <= (sizeof(JOYSTICKS) - 1); j++) {
     pinMode(JOYSTICKS[i], INPUT);
   }
@@ -30,8 +31,6 @@ void setup() {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
   Serial.println("Client starts...");
-
-
 
   Ethernet.begin(mac0, ip0, _dns, gateway, subnet);
   delay(1000);
@@ -51,17 +50,15 @@ void setup() {
 
 void loop()
 {
-  delay(100);
-  
   // Manual Commands via Serial Console
   if (Serial.available()) {
-    manual_command = Serial.readString();
-    manual_command.trim();
+    command = Serial.readString();
+    command.trim();
 
-    if (manual_command != "") {
-      Serial.println("****Manual Command \""+manual_command+"\" ****");
-      manual_command += "\n";
-      sendCommand(manual_command);
+    if (command != "") {
+      Serial.println("****Manual Command \""+command+"\" ****");
+      command += "\n";
+      sendCommand(command);
     }
   }
 
@@ -84,20 +81,16 @@ void loop()
   // char c = client.read();
   // Serial.print("Server says: ");
   // Serial.println(c);
+
+  delay(100);
 }
 
 void sendCommand(String command) {
   Serial.print("Sending: ");
-  Serial.println(command);
+  Serial.print(command);
 
-  command.toCharArray(command_to_send, 100);
-  
-  if (client.connected()) {
-    for (i = 0; i < strlen(command_to_send); i++) {
-      client.print(command_to_send[i]); // TODO use println() here?
-    }
-  }
-  
+  command.toCharArray(command_to_send, 100); // TODO append \n in any case
+
   if (!client.connected()) {
     Serial.println();
     Serial.println("disconnected/disconnecting...");
@@ -105,6 +98,12 @@ void sendCommand(String command) {
     client.stop();
     client.connect(ip1, httpport);
     delay(500);
+  }
+
+  if (client.connected()) {
+    for (i = 0; i < strlen(command_to_send); i++) {
+      client.print(command_to_send[i]); // TODO use println() here? With full command without for...
+    }
   }
 }
 
