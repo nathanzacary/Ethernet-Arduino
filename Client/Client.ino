@@ -20,7 +20,6 @@ int mot00         = 3;    // Motor connected to digital pin 3
 int motdirpin01   = 4; //Motordirection pin 1
 int motdirpin02   = 7; //Motordirection pin 2
 int motdir0       = 2; //Motordirection
-int fivevpin      = 8;
 int calswpin1     = 0; // calibrateswitch connected to digital pin 0
 int calibrate     = HIGH;
 int motrpm00cal   = 0;
@@ -38,10 +37,9 @@ int v;
 
 
 void setup() {
-  pinMode(INPUTS[0], INPUT);
-  pinMode(INPUTS[1], INPUT);
-  pinMode(INPUTS[2], INPUT);
-  pinMode(INPUTS[3], INPUT);
+  for (j=0; j <= (sizeof(JOYSTICKS) - 1); j++) {
+    pinMode(JOYSTICKS[j], INPUT);
+  }
 
   // Deactivate SD Card, See http://electronics.stackexchange.com/a/67214/3130
   pinMode(4, OUTPUT);
@@ -105,22 +103,22 @@ void loop()
 
     // Only 1 Motor: use "j <= 0"
     
-    for (j=0; j <= (sizeof(INPUTS) - 1); j++) {
+    for (j=0; j <= (sizeof(JOYSTICKS) - 1); j++) {
       /*
       calibrate = digitalRead(calswpin1);
       
       if (calibrate == LOW){
-        motrpm00    = analogRead(INPUTS[j]);
+        motrpm00    = analogRead(JOYSTICKS[j]);
         motrpm00cal = motrpm00 - 511;
         motrpm00    = motrpm00 - motrpm00cal;
       } else{
-        motrpm00    = analogRead(INPUTS[j]);
+        motrpm00    = analogRead(JOYSTICKS[j]);
         motrpm00    = motrpm00 - motrpm00cal;
       }
       */
 
       // Wert lesen
-      v = analogRead(INPUTS[j]);
+      v = analogRead(JOYSTICKS[j]);
       
       command = "A";
       command.concat(j);
