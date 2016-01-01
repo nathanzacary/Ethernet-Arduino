@@ -1,5 +1,5 @@
 # Ethernet-Arduino
-Kommunikation zwischen zwei Arduinos für ROV
+Kommunikation zwischen zwei Arduinos für ROV, https://6brueder.wordpress.com/2015/12/31/ethernet-arduino-1-0-release/
 
 # Required Hardware
 - 2 Arduino UNO
