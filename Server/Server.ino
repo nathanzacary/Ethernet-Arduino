@@ -31,7 +31,7 @@ void setup()
   digitalWrite(4, HIGH);
   digitalWrite(10, LOW);
   
-  Serial.begin(9600);
+  Serial.begin(serialspeed);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }

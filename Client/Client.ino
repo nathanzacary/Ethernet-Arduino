@@ -7,38 +7,15 @@
 
 EthernetClient client;
 
-
-char myVar[100]; // contains string with variable to transmit
-String debug = "";
-String command;
-int ii;
-int j;
-
-// int a0         = A0;      //Poti connected to pin A0
-int motrpm00      = 0; // Motordrehwert
-int mot00         = 3;    // Motor connected to digital pin 3
-int motdirpin01   = 4; //Motordirection pin 1
-int motdirpin02   = 7; //Motordirection pin 2
-int motdir0       = 2; //Motordirection
-int calswpin1     = 0; // calibrateswitch connected to digital pin 0
-int calibrate     = HIGH;
-int motrpm00cal   = 0;
-//boolean calibrate = false;
-
-int v;
-
-
-
-
-
-
-
-
+String  manual_command = "";
+String  command;
+char    command_to_send[100];
+int     i, j, v;
 
 
 void setup() {
   for (j=0; j <= (sizeof(JOYSTICKS) - 1); j++) {
-    pinMode(JOYSTICKS[j], INPUT);
+    pinMode(JOYSTICKS[i], INPUT);
   }
 
   // Deactivate SD Card, See http://electronics.stackexchange.com/a/67214/3130
@@ -46,16 +23,9 @@ void setup() {
   pinMode(10, OUTPUT);
   digitalWrite(4, HIGH);
   digitalWrite(10, LOW);
-
-  pinMode(calswpin1,    INPUT);
-  pinMode(motdirpin01,  OUTPUT);
-  pinMode(motdirpin02,  OUTPUT);
-  pinMode(mot00,        OUTPUT);
-  digitalWrite(calswpin1, HIGH);      // turn on pull resistor
-
   
   
-  Serial.begin(9600);
+  Serial.begin(serialspeed);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
@@ -83,95 +53,52 @@ void loop()
 {
   delay(100);
   
-  // Debugging (Commands via Serial Console)
+  // Manual Commands via Serial Console
   if (Serial.available()) {
-      debug = Serial.readString();
-      debug.trim();
+      manual_command = Serial.readString();
+      manual_command.trim();
   }
-  if (debug != "") {
-    Serial.println("****Command \""+debug+"\" ****");
+  if (manual_command != "") {
+    Serial.println("****Manual Command \""+manual_command+"\" ****");
+    manual_command += "\n";
+    sendCommand(manual_command);
   }
+
+  
+  // Read Client sensors and send values to Server
+  
+  // 1. Joysticks
+  for (j=0; j <= (sizeof(JOYSTICKS) - 1); j++) {
+    v = analogRead(JOYSTICKS[j]);
+    command = "A";
+    command.concat(j);
+    command.concat("v");
+    command.concat(v);
+    command.concat('\n');
+    
+    sendCommand(command);
+  }
+
 
   // char c = client.read();
-  // Serial.print("***Server says:***\n");
-  // Serial.print(c);
-  
+  // Serial.print("Server says: ");
+  // Serial.println(c);
 
-
-    
-  if (debug == "") {
-
-    // Only 1 Motor: use "j <= 0"
-    
-    for (j=0; j <= (sizeof(JOYSTICKS) - 1); j++) {
-      /*
-      calibrate = digitalRead(calswpin1);
-      
-      if (calibrate == LOW){
-        motrpm00    = analogRead(JOYSTICKS[j]);
-        motrpm00cal = motrpm00 - 511;
-        motrpm00    = motrpm00 - motrpm00cal;
-      } else{
-        motrpm00    = analogRead(JOYSTICKS[j]);
-        motrpm00    = motrpm00 - motrpm00cal;
-      }
-      */
-
-      // Wert lesen
-      v = analogRead(JOYSTICKS[j]);
-      
-      command = "A";
-      command.concat(j);
-      command.concat("v");
-      command.concat(v);
-      command.concat('\n');
-      
-      Serial.print(command);
-      strcpy(myVar, command.c_str());
-      
-      sendCommand(myVar);
-    }
-
-/*
-    // Calibrate?
-    v = digitalRead(calswpin1);
-    if (v == LOW) {
-      command = "C";
-      command.concat(j);
-      command.concat("v");
-      command.concat(v);
-      command.concat('\n');
-      Serial.print(command);
-      strcpy(myVar, command.c_str());
-      sendCommand(myVar);
-    }
-*/
-    
-    // strcpy(myVar, "123.456\n");
-  } else {
-    debug += "\n";
-    debug.toCharArray(myVar, 100);
-    sendCommand(myVar);
-  }
-
- 
-
-
-  
-  j = 0;
-  debug = "";
+  manual_command = "";
 }
 
-void sendCommand(char myVar[100]) {
-  Serial.print("sending: ");
-  Serial.println(myVar);
+void sendCommand(String command) {
+  Serial.print("Sending: ");
+  Serial.println(command);
+
+  command.toCharArray(command_to_send, 100);
   
-  for (ii = 0; ii < strlen(myVar); ii++) {
-    if (client.connected()) { // wieso??? wenn disconnected werden Zeichen übersprungen!
-      client.print(myVar[ii]);
+  if (client.connected()) {
+    for (i = 0; i < strlen(command_to_send); i++) {
+      client.print(command_to_send[i]); // TODO use println() here?
     }
   }
-
+  
   if (!client.connected()) {
     Serial.println();
     Serial.println("disconnected/disconnecting...");
@@ -181,4 +108,31 @@ void sendCommand(char myVar[100]) {
     delay(500);
   }
 }
+
+
+
+
+/*
+calibrate = digitalRead(calswpin1);
+if (calibrate == LOW){
+  motrpm00    = analogRead(JOYSTICKS[j]);
+  motrpm00cal = motrpm00 - 511;
+  motrpm00    = motrpm00 - motrpm00cal;
+} else{
+  motrpm00    = analogRead(JOYSTICKS[j]);
+  motrpm00    = motrpm00 - motrpm00cal;
+}
+
+v = digitalRead(calswpin1);
+if (v == LOW) {
+  command = "C";
+  command.concat(j);
+  command.concat("v");
+  command.concat(v);
+  command.concat('\n');
+  Serial.print(command);
+  strcpy(myVar, command.c_str());
+  sendCommand(myVar);
+}
+*/
 

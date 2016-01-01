@@ -18,7 +18,7 @@ byte subnet[]   = {255, 255, 255, 0};
 
 // Misc
 int httpport    = 80;
-int serialspeed = 115200;
+int serialspeed = 9600;
 
 // Helper
 String ip_to_string(byte ip[4]) {
